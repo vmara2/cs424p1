@@ -3,6 +3,7 @@
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
+library(usmap)
 
 # ----- DATA CLEANUP -----
 usenergy <- read.table(file="annual_generation_state.csv", sep=",", header=TRUE)
@@ -34,7 +35,16 @@ names(electric)[names(electric)=="TYPE.OF.PRODUCER"] <- "TYPE OF PRODUCER"
 names(electric)[names(electric)=="ENERGY.SOURCE"] <- "ENERGY SOURCE"
 names(electric)[names(electric)=="GENERATION..Megawatthours."] <- "GENERATION (MWh)"
 
-ui <- fluidPage("Hello world")
+years <- c(1990:2019)
+
+# ----- UI -----
+ui <- dashboardPage(
+  dashboardHeader(title="CS 424 Project 1"),
+  dashboardSidebar(disable = FALSE, collapsed = FALSE,
+                   selectInput("Year", "Select the year to visualize", years, selected = 2019)
+                   ),
+  dashboardBody()
+)
 
 server <- function(input, output) {}
 
