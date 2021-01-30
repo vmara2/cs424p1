@@ -16,7 +16,7 @@ usenergy$STATE <- toupper(usenergy$STATE)
 usenergy <- usenergy[(usenergy$GENERATION..Megawatthours. >= 0), ]
 # since state is the only non-factor, convert to factor
 usenergy$STATE <- factor(usenergy$STATE)
-# removing 
+# removing the factors that were designated for removal
 usenergy <- subset(usenergy, usenergy$ENERGY.SOURCE != "Other" & usenergy$ENERGY.SOURCE != "Other Gases" &
                      usenergy$ENERGY.SOURCE != "Other Biomass" & usenergy$ENERGY.SOURCE != "Pumped Storage")
 
@@ -30,10 +30,10 @@ levels(usenergy$ENERGY.SOURCE)[14] <- "Wood"
 # creating subset with Electric producers and Total energy source rows.
 electric <- subset(usenergy, TYPE.OF.PRODUCER=="Total Electric Power Industry" & ENERGY.SOURCE=="Total")
 
-
-names(electric)[names(electric)=="TYPE.OF.PRODUCER"] <- "TYPE OF PRODUCER"
-names(electric)[names(electric)=="ENERGY.SOURCE"] <- "ENERGY SOURCE"
-names(electric)[names(electric)=="GENERATION..Megawatthours."] <- "GENERATION (MWh)"
+# renaming columns for cleaner look
+names(usenergy)[names(usenergy)=="TYPE.OF.PRODUCER"] <- "TYPE OF PRODUCER"
+names(usenergy)[names(usenergy)=="ENERGY.SOURCE"] <- "ENERGY SOURCE"
+names(usenergy)[names(usenergy)=="GENERATION..Megawatthours."] <- "GENERATION (MWh)"
 
 years <- c(1990:2019)
 
@@ -43,10 +43,29 @@ ui <- dashboardPage(
   dashboardSidebar(disable = FALSE, collapsed = FALSE,
                    selectInput("Year", "Select the year to visualize", years, selected = 2019)
                    ),
-  dashboardBody()
+  dashboardBody(
+    fluidRow(
+      column(6, 
+        fluidRow(
+          box(title = "Total Amount of Energy Sources by Year", status = "primary", solidHeader = TRUE, width = 12,
+              plotOutput("totalenergy"))
+        ))
+    )
+  )
 )
 
-server <- function(input, output) {}
+# ----- SERVER -----
+server <- function(input, output) {
+  
+  # stores the data given the year in the drop down menu
+  ddenergyReactive <- reactive({subset(usenergy, usenergy$YEAR == input$Year & usenergy$`ENERGY SOURCE` != "Total")})
+  
+  output$totalenergy <- renderPlot({
+    ddenergy <- ddenergyReactive()
+    
+    ggplot(ddenergy, aes(x=`ENERGY SOURCE`, y=`GENERATION (MWh)`)) + geom_bar(stat = 'identity')
+  })
+}
 
 # Run the application 
 shinyApp(ui = ui, server = server)
