@@ -5,8 +5,8 @@ account: valo-mara
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3549596
-bundleId: 4159455
+bundleId: 4162837
 url: https://valo-mara.shinyapps.io/cs424p1/
-when: 1611967068.1416
+when: 1612079172.14191
 asMultiple: FALSE
 asStatic: FALSE

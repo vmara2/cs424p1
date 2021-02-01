@@ -45,14 +45,14 @@ ui <- dashboardPage(
                    ),
   dashboardBody(
     fluidRow(
-      column(6, 
+      column(4, 
         fluidRow(
           box(title = "Total Amount of Energy Sources by Year", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("totalenergy"))
         ))
     )
-  )
-)
+  )# end body
+)# end page
 
 # ----- SERVER -----
 server <- function(input, output) {
@@ -63,7 +63,8 @@ server <- function(input, output) {
   output$totalenergy <- renderPlot({
     ddenergy <- ddenergyReactive()
     
-    ggplot(ddenergy, aes(x=`ENERGY SOURCE`, y=`GENERATION (MWh)`)) + geom_bar(stat = 'identity')
+    ggplot(ddenergy, aes(fill=`ENERGY SOURCE`, x=as.character(YEAR), y=`GENERATION (MWh)`)) + geom_bar(position='stack', stat = 'identity') +
+      scale_y_continuous(labels=scales::comma)
   })
 }
 
