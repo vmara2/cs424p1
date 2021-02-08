@@ -48,21 +48,21 @@ ui <- dashboardPage(
     fluidRow(
       column(4, 
         fluidRow(
-          box(title = "Total Amount of Energy Sources by Year", status = "primary", solidHeader = TRUE, width = 12,
+          box(title = "Total Amount of Energy Sources by Year (Stacked Bar Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("totalenergy")) 
         ), # row 1
         fluidRow(
-          box(title = "Percent of Total Energy Sources by Year", status = "primary", solidHeader = TRUE, width = 12,
+          box(title = "Percent of Total Energy Sources by Year (Stacked Bar Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("percentenergy"))
         )), # row 2 / column 1
       
       column(4,
         fluidRow(
-          box(title = "Line Chart 1", status = "primary", solidHeader = TRUE, width = 12,
+          box(title = "Total Amount of Energy Sources by Year (Line Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("total_line"))
         ), # row 1
         fluidRow(
-          box(title = "Line Chart 2", status = "primary", solidHeader = TRUE, width = 12,
+          box(title = "Percent of Total Energy Sources by Year (Line Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("percent_line"))
         )) # row 2 / column 2
     )
@@ -81,7 +81,7 @@ server <- function(input, output) {
     
     ggplot(new_us_energy, aes(fill=`ENERGY SOURCE`, x=YEAR, y=`GENERATION (MWh)`)) + geom_bar(position='stack', stat = 'identity') +
       scale_y_continuous(labels=scales::comma) +
-      labs(x="Year")
+      labs(x="Year", y="Total Generation (MWh)")
   })
   
   # shows the percent of each energy source by year
@@ -98,7 +98,8 @@ server <- function(input, output) {
     # ddenergy <- ddenergyReactive()
     
     ggplot(new_us_energy, aes(x=YEAR, y=`GENERATION (MWh)`, color=`ENERGY SOURCE`)) + geom_line(stat="summary", fun="sum") + geom_point(stat="summary", fun="sum") +
-      scale_y_continuous(labels=scales::comma)
+      scale_y_continuous(labels=scales::comma) +
+      labs(x="Year", y="Total Generation (MWh)")
   })
   
   # line chart showing percentage of energy by year
