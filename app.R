@@ -60,11 +60,21 @@ ui <- dashboardPage(
         fluidRow(
           box(title = "Total Amount of Energy Sources by Year (Line Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("total_line"))
-        ), # row 1
+        ), # row 1 
         fluidRow(
           box(title = "Percent of Total Energy Sources by Year (Line Chart)", status = "primary", solidHeader = TRUE, width = 12,
               plotOutput("percent_line"))
-        )) # row 2 / column 2
+        )), # row 2 / column 2
+      
+      column(4,
+        fluidRow(
+          box(title = "Total Amount of Energy Sources by Year (Table)", status = "primary", solidHeader = TRUE, width = 12,
+              plotOutput("total_table"))
+        ),
+        fluidRow(
+          box(title = "Percent of Total Energy Sources by Year (Table)", status = "primary", solidHeader = TRUE, width = 12,
+              plotOutput("percent_table"))
+        ))
     )
   )# end body
 )# end page
