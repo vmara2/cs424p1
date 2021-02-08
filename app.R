@@ -104,7 +104,13 @@ server <- function(input, output) {
   # line chart showing percentage of energy by year
   output$percent_line <- renderPlot({
     
-    ggplot(new_us_energy, aes(x=YEAR, y+`GENERATION (MWh)`, color=`ENERGY SOURCE`, fill=`ENERGY SOURCE`)) + geom_line(position='fill')
+    # calculating percentage of each energy source by year
+    agg <- aggregate(`GENERATION (MWh)`~YEAR+`ENERGY SOURCE`, new_us_energy, sum)
+    agg <- transform(agg, Percent = ave(`GENERATION (MWh)`, YEAR, FUN=prop.table))
+    
+    ggplot(agg, aes(x=YEAR, y=Percent, color=ENERGY.SOURCE)) + geom_line() + geom_point() +
+      scale_y_continuous(labels=scales::percent) +
+      labs(x="Year", y="Percent of Total Generation")
   })
 }
 
