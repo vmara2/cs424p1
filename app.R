@@ -69,11 +69,11 @@ ui <- dashboardPage(
       column(4,
         fluidRow(
           box(title = "Total Amount of Energy Sources by Year (Table)", status = "primary", solidHeader = TRUE, width = 12,
-              plotOutput("total_table"))
+              dataTableOutput("total_table"))
         ),
         fluidRow(
           box(title = "Percent of Total Energy Sources by Year (Table)", status = "primary", solidHeader = TRUE, width = 12,
-              plotOutput("percent_table"))
+              dataTableOutput("percent_table"))
         ))
     )
   )# end body
@@ -123,6 +123,20 @@ server <- function(input, output) {
       scale_y_continuous(labels=scales::percent) +
       labs(x="Year", y="Percent of Total Generation")
   })
+  
+  # table showing total energy by year
+  output$total_table <- renderDataTable({
+    agg <- aggregate(`GENERATION (MWh)`~YEAR+`ENERGY SOURCE`, new_us_energy, sum)
+    }, options = list(pageLength = 7, order=list(1, 'asc')))
+  
+  # table showing percentage of energy source by year
+  output$percent_table <- renderDataTable({
+    agg <- aggregate(`GENERATION (MWh)`~YEAR+`ENERGY SOURCE`, new_us_energy, sum)
+    agg <- transform(agg, Percent = ave(`GENERATION (MWh)`, YEAR, FUN=prop.table))
+    agg$GENERATION..MWh. <- NULL
+    agg$Percent <- round(agg$Percent, 2)
+    agg
+  }, options=list(pageLength=7, order=list(1, 'asc')))
 }
 
 # Run the application 
