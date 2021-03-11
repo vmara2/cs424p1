@@ -1,5 +1,5 @@
 # Valo Mara - CS 424 Project 1 Spring '21
-
+require(stringr)
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
@@ -254,7 +254,6 @@ server <- function(input, output) {
     agg$abb <- state.abb[match(agg$STATE, state.abb)]
     agg$fips <- fips(agg$STATE)
     
-    View(agg)
     plot_usmap(data = agg, values = "percentage", labels = TRUE) + labs(fill="Percentage of Total MWh")
   })
   
